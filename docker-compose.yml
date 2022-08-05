@@ -27,7 +27,8 @@ services:
       retries: 3
   user-service:
     image: "mafeidev/discovery-client-group-test_use-service"
-    container_name: "discovery-client-group-test_user-service"
+    deploy:
+      replicas: 3
     restart: always
     networks:
       - discovery-client-group-test
@@ -35,6 +36,7 @@ services:
       - DEFAULT_ZONE= http://eureka-service:8070/eureka/
     depends_on:
       - api-gateway
+
 
 networks:
   discovery-client-group-test:
