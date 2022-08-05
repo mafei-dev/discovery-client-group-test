@@ -9,8 +9,7 @@ server:
 
 eureka:
   instance:
-    preferIpAddress: false
-    hostname: localhost
+    preferIpAddress: true
     instance-id: "${random.uuid}:${spring.application.name}"
     metadata-map:
       node: node1
@@ -19,7 +18,7 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://localhost:8070/eureka/
+      defaultZone: ${DEFAULT_ZONE:http://localhost:8070/eureka/}
     healthcheck:
       enabled: true
     should-unregister-on-shutdown: true
