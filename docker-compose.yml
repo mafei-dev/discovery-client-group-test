@@ -1,0 +1,41 @@
+version: "3"
+services:
+  eureka-service:
+    image: "mafeidev/discovery-client-group-test_eureka-service"
+    ports:
+      - "8070:8070"
+    container_name: "discovery-client-group-test_eureka-service"
+    restart: always
+    networks:
+      - discovery-client-group-test
+  api-gateway:
+    image: "mafeidev/discovery-client-group-test_api-gateway"
+    ports:
+      - "8080:8080"
+    container_name: "discovery-client-group-test_api-gateway"
+    restart: always
+    networks:
+      - discovery-client-group-test
+    environment:
+      - DEFAULT_ZONE= http://eureka-service:8070/eureka/
+    depends_on:
+      - eureka-service
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://eureka-service:8070/health" ]
+      interval: 1m30s
+      timeout: 5s
+      retries: 3
+  user-service:
+    image: "mafeidev/discovery-client-group-test_use-service"
+    container_name: "discovery-client-group-test_user-service"
+    restart: always
+    networks:
+      - discovery-client-group-test
+    environment:
+      - DEFAULT_ZONE= http://eureka-service:8070/eureka/
+    depends_on:
+      - api-gateway
+
+networks:
+  discovery-client-group-test:
+    driver: bridge
